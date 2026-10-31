@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hasan | Designer & Artist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #000;
+      color: #ff8c1a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background blur bergerak */
+    .blobs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(110px); opacity: 0.22;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .b1 { width: 480px; height: 480px; background: #2d5bff; top: -120px; left: -100px; }
+    .b2 { width: 420px; height: 420px; background: #e0262b; top: 30%; right: -120px; animation-duration: 22s; }
+    .b3 { width: 500px; height: 500px; background: #ff7a1a; bottom: -150px; left: 30%; animation-duration: 26s; }
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(120px, 80px) scale(1.15); }
+      100% { transform: translate(-80px, 140px) scale(0.9); }
+    }
+
+    .content { position: relative; z-index: 1; }
+    .container { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+    }
+    nav .container { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+    nav .logo { font-weight: 800; letter-spacing: 1px; }
+    nav ul { display: flex; gap: 24px; list-style: none; }
+    nav a { color: #ff8c1a; text-decoration: none; font-weight: 300; }
+    nav a:hover { color: #fff; }
+
+    section { padding: 96px 0; }
+
+    /* Hero dengan foto profil */
+    .hero { min-height: 88vh; display: flex; align-items: center; }
+    .hero-inner { display: flex; align-items: center; gap: 56px; flex-wrap: wrap; }
+    .hero-text { flex: 1; min-width: 280px; }
+    .hero h1 { font-size: clamp(3.5rem, 10vw, 7rem); font-weight: 800; line-height: 1; }
+    .hero .sub { margin-top: 16px; font-size: 1.25rem; font-weight: 300; }
+    .profile {
+      width: 280px; height: 280px; border-radius: 50%; object-fit: cover;
+      border: 3px solid #ff8c1a;
+      box-shadow: 0 0 60px rgba(255,140,26,.35);
+    }
+    .tags { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+    .tag { border: 1px solid #ff8c1a; padding: 8px 18px; border-radius: 999px; font-size: 0.95rem; }
+    .btn {
+      display: inline-block; margin-top: 36px; padding: 14px 30px;
+      background: #ff8c1a; color: #000; font-weight: 600; border-radius: 999px;
+      text-decoration: none; transition: transform .2s, box-shadow .2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,140,26,.4); }
+
+    h2 {
+      font-size: 2.2rem; font-weight: 800; margin-bottom: 32px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    h2::after { content: ""; flex: 1; height: 1px; background: #ff8c1a; opacity: .5; }
+
+    .glass {
+      background: #0b1733;
+      border: 1px solid rgba(45,125,255,0.35);
+      border-radius: 18px; padding: 28px;
+      color: #fff;
+    }
+    .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+
+    .art {
+      aspect-ratio: 4 / 3; border-radius: 16px; display: flex; align-items: flex-end;
+      padding: 20px; color: #fff; font-weight: 800; font-size: 1.1rem;
+      transition: transform .3s;
+    }
+    .art:hover { transform: scale(1.03); }
+
+    .ig-link { display: inline-block; margin-top: 24px; color: #ff8c1a; text-decoration: none; }
+    .ig-link:hover { color: #fff; }
+    .contact-link { color: #fff; text-decoration: underline; }
+    .glass small { color: #cfd9ff; }
+
+    footer { padding: 40px 0; text-align: center; font-weight: 300; opacity: .8; }
+
+    @media (max-width: 640px) {
+      nav ul { gap: 14px; font-size: .9rem; }
+      section { padding: 72px 0; }
+      .profile { width: 220px; height: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.0/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const data = {
+      nama: "Hasan",
+      keahlian: ["Designer", "Artist"],
+      foto: "profile.jpg",
+      kontak: { telepon: "08723627623", email: "alcyonemarch@gmail.com", instagram: "mazovage" },
+      tentang:
+        "Saya seorang yang bergelut di bidang multimedia dan sedang mencoba menapaki dunia IT di UIKA dengan jurusan Teknik Informatika. Saya sudah berpengalaman sebagai operator acara perpisahan, membuat commission character, dan membuat banner untuk UKM.",
+      pendidikan: [
+        { jenjang: "Sekolah Dasar", nama: "SDIT Al Izzah" },
+        { jenjang: "Sekolah Menengah Pertama", nama: "SMP IT Zaid bin Tsabit" },
+        { jenjang: "Sekolah Menengah Atas", nama: "SMK IT Insan Toda" },
+        { jenjang: "Perguruan Tinggi", nama: "UIKA Bogor - Teknik Informatika" },
+      ],
+      pengalaman: [
+        "Operator acara perpisahan sekolah",
+        "Pembuatan commission character",
+        "Desain banner untuk UKM",
+      ],
+      artwork: [
+        { judul: "Commission Character", warna: "#ff7a1a" },
+        { judul: "Banner UKM", warna: "#e8442e" },
+        { judul: "Ilustrasi Digital", warna: "#2d7dff" },
+        { judul: "Desain Poster", warna: "#ffa53d" },
+      ],
+      bahasa: [
+        { nama: "Bahasa Indonesia", level: "Native" },
+        { nama: "English", level: "Fluent" },
+      ],
+    };
+
+    function Blobs() {
+      return (
+        <div className="blobs" aria-hidden="true">
+          <div className="blob b1" />
+          <div className="blob b2" />
+          <div className="blob b3" />
+        </div>
+      );
+    }
+
+    function Section({ id, title, children }) {
+      return (
+        <section id={id}>
+          <div className="container">
+            <h2>{title}</h2>
+            {children}
+          </div>
+        </section>
+      );
+    }
+
+    function App() {
+      const [year] = useState(new Date().getFullYear());
+
+      return (
+        <>
+          <Blobs />
+          <div className="content">
+            <nav>
+              <div className="container">
+                <div className="logo">{data.nama.toUpperCase()}</div>
+                <ul>
+                  <li><a href="#tentang">Tentang</a></li>
+                  <li><a href="#artwork">Artwork</a></li>
+                  <li><a href="#kontak">Kontak</a></li>
+                </ul>
+              </div>
+            </nav>
+
+            <header className="hero">
+              <div className="container hero-inner">
+                <div className="hero-text">
+                  <p>Halo, saya</p>
+                  <h1>{data.nama}</h1>
+                  <p className="sub">Multimedia enthusiast, Designer &amp; Artist</p>
+                  <div className="tags">
+                    {data.keahlian.map((k) => (
+                      <span className="tag" key={k}>{k}</span>
+                    ))}
+                  </div>
+                  <a className="btn" href="#kontak">Hubungi Saya</a>
+                </div>
+                <img className="profile" src={data.foto} alt={`Foto profil ${data.nama}`} />
+              </div>
+            </header>
+
+            <Section id="tentang" title="Tentang Saya">
+              <div className="glass">
+                <p style={{ lineHeight: 1.8, fontWeight: 300 }}>{data.tentang}</p>
+              </div>
+            </Section>
+
+            <Section title="Pendidikan">
+              <div className="grid2">
+                {data.pendidikan.map((p) => (
+                  <div className="glass" key={p.jenjang}>
+                    <small style={{ opacity: 0.7 }}>{p.jenjang}</small>
+                    <h3 style={{ marginTop: 6, fontWeight: 600 }}>{p.nama}</h3>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section title="Pengalaman">
+              <div className="grid2">
+                {data.pengalaman.map((e) => (
+                  <div className="glass" key={e}>
+                    <p style={{ fontWeight: 600 }}>{e}</p>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section id="artwork" title="Artwork">
+              <div className="grid4">
+                {data.artwork.map((a) => (
+                  <div
+                    className="art"
+                    key={a.judul}
+                    style={{ background: `linear-gradient(160deg, ${a.warna}, #000 110%)` }}
+                  >
+                    {a.judul}
+                  </div>
+                ))}
+              </div>
+              <a className="ig-link" href={`https://instagram.com/${data.kontak.instagram}`} target="_blank" rel="noreferrer">
+                Lihat karya lainnya di Instagram @{data.kontak.instagram} →
+              </a>
+            </Section>
+
+            <Section title="Bahasa">
+              <div className="grid2">
+                {data.bahasa.map((b) => (
+                  <div className="glass" key={b.nama}>
+                    <p style={{ fontWeight: 600 }}>{b.nama}</p>
+                    <small style={{ opacity: 0.7 }}>{b.level}</small>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section id="kontak" title="Kontak">
+              <div className="glass">
+                <p>
+                  Telepon:{" "}
+                  <a className="contact-link" href={`tel:${data.kontak.telepon}`}>{data.kontak.telepon}</a>
+                </p>
+                <p style={{ marginTop: 10 }}>
+                  Email:{" "}
+                  <a className="contact-link" href={`mailto:${data.kontak.email}`}>{data.kontak.email}</a>
+                </p>
+                <p style={{ marginTop: 10 }}>Alamat: Bogor, Jawa Barat</p>
+              </div>
+            </Section>
+
+            <footer>© {year} {data.nama}. Dibuat dengan React.</footer>
+          </div>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
